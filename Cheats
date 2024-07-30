@@ -1,0 +1,145 @@
+-- Wczytaj klucze z pliku
+local keys = loadstring(game:HttpGet("https://raw.githubusercontent.com/Virxq/keys.lua/main/Keys.lua"))() -- Zamień na właściwą ścieżkę do pliku z kluczami
+
+local function isValidKey(inputKey)
+    local currentTime = os.time()
+    if keys[inputKey] and keys[inputKey] > currentTime then
+        return true, keys[inputKey] - currentTime
+    else
+        return false
+    end
+end
+
+-- GUI
+local ScreenGui = Instance.new("ScreenGui")
+local ActivationFrame = Instance.new("Frame")
+local KeyLabel = Instance.new("TextLabel")
+local KeyInput = Instance.new("TextBox")
+local SubmitButton = Instance.new("TextButton")
+local MainGui = Instance.new("Frame")
+
+ScreenGui.Name = "CheatGUI"
+ScreenGui.Parent = game.CoreGui
+
+ActivationFrame.Name = "ActivationFrame"
+ActivationFrame.Parent = ScreenGui
+ActivationFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ActivationFrame.Position = UDim2.new(0.3, 0, 0.3, 0)
+ActivationFrame.Size = UDim2.new(0.4, 0, 0.3, 0)
+
+KeyLabel.Name = "KeyLabel"
+KeyLabel.Parent = ActivationFrame
+KeyLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+KeyLabel.BorderSizePixel = 0
+KeyLabel.Size = UDim2.new(1, 0, 0.4, 0)
+KeyLabel.Font = Enum.Font.SourceSansBold
+KeyLabel.Text = "Wprowadź klucz:"
+KeyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyLabel.TextSize = 24
+
+KeyInput.Name = "KeyInput"
+KeyInput.Parent = ActivationFrame
+KeyInput.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.BorderSizePixel = 0
+KeyInput.Position = UDim2.new(0.1, 0, 0.5, 0)
+KeyInput.Size = UDim2.new(0.8, 0, 0.3, 0)
+KeyInput.Font = Enum.Font.SourceSans
+KeyInput.Text = ""
+KeyInput.TextColor3 = Color3.fromRGB(0, 0, 0)
+KeyInput.TextSize = 18
+
+SubmitButton.Name = "SubmitButton"
+SubmitButton.Parent = ActivationFrame
+SubmitButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+SubmitButton.BorderSizePixel = 0
+SubmitButton.Position = UDim2.new(0.1, 0, 0.85, 0)
+SubmitButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+SubmitButton.Font = Enum.Font.SourceSansBold
+SubmitButton.Text = "Aktywuj"
+SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SubmitButton.TextSize = 18
+
+MainGui.Name = "MainGui"
+MainGui.Parent = ScreenGui
+MainGui.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+MainGui.Position = UDim2.new(0.2, 0, 0.1, 0)
+MainGui.Size = UDim2.new(0.6, 0, 0.8, 0)
+MainGui.Visible = false
+
+local Title = Instance.new("TextLabel")
+Title.Name = "Title"
+Title.Parent = MainGui
+Title.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+Title.BorderSizePixel = 0
+Title.Size = UDim2.new(1, 0, 0.1, 0)
+Title.Font = Enum.Font.SourceSansBold
+Title.Text = "Kumelala Cheats Blox Fruits 0.5 beta"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 24
+
+local DaysLeftLabel = Instance.new("TextLabel")
+DaysLeftLabel.Name = "DaysLeftLabel"
+DaysLeftLabel.Parent = MainGui
+DaysLeftLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+DaysLeftLabel.BorderSizePixel = 0
+DaysLeftLabel.Position = UDim2.new(0.7, 0, 0, 0)
+DaysLeftLabel.Size = UDim2.new(0.3, 0, 0.1, 0)
+DaysLeftLabel.Font = Enum.Font.SourceSansBold
+DaysLeftLabel.Text = "Dni do końca: "
+DaysLeftLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+DaysLeftLabel.TextSize = 24
+
+-- Funkcje cheatów (przykłady)
+local function toggleSpeed()
+    -- Kod do przyspieszenia postaci
+end
+
+local function toggleFly()
+    -- Kod do latania
+end
+
+local function toggleGodMode()
+    -- Kod do trybu Boga
+end
+
+local function toggleAutoFarm()
+    -- Kod do auto farmingu
+end
+
+local function toggleTeleport()
+    -- Kod do teleportacji
+end
+
+-- Przykład dodania przycisków do głównego GUI
+local function addButton(name, callback)
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Parent = MainGui
+    button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    button.BorderSizePixel = 0
+    button.Size = UDim2.new(0.9, 0, 0.1, 0)
+    button.Position = UDim2.new(0.05, 0, 0.1 + (#MainGui:GetChildren() - 2) * 0.1, 0)
+    button.Font = Enum.Font.SourceSansBold
+    button.Text = name
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.TextSize = 24
+    button.MouseButton1Click:Connect(callback)
+end
+
+addButton("Speed", toggleSpeed)
+addButton("Fly", toggleFly)
+addButton("God Mode", toggleGodMode)
+addButton("Auto Farm", toggleAutoFarm)
+addButton("Teleport", toggleTeleport)
+
+SubmitButton.MouseButton1Click:Connect(function()
+    local enteredKey = KeyInput.Text
+    local isValid, timeLeft = isValidKey(enteredKey)
+    if isValid then
+        MainGui.Visible = true
+        ActivationFrame.Visible = false
+        DaysLeftLabel.Text = "Dni do końca: " .. math.floor(timeLeft / (24 * 60 * 60))
+    else
+        KeyLabel.Text = "Nieprawidłowy klucz! Spróbuj ponownie."
+    end
+end)
